@@ -6,10 +6,21 @@ This provisions a Base Image from a previously created Root Image.
 
 We use `Root Image` to mean a completely unprovisioned bare image with nothing beyond a basic OS install. We use `Base Image` to mean a partially provisioned image with services required by all operational servers, e.g. monitoring, log aggregation, telemetry, etc.
 
-## Local System Requirements
+## Setup
 
-- packer >= 1.7.3
-- ansible >= 4.3
+### Basic Tooling
+
+First setup Homebrew, and make sure everything is up to date.
+
+Clone this repo and `cd` into it.  Run the following to set up tools:
+
+```bash
+brew bundle
+```
+
+When setting things up, you will need to download a copy of the fork of Packer we use from here: <https://github.com/AlexSc/packer/releases/tag/v1.7.5-dev3>
+
+Unzip and put the file in `~/bin`.
 
 ## Image Specifications
 
@@ -68,3 +79,23 @@ The Base Image provides [NewRelic Infrastructure Monitoring](https://docs.newrel
 newrelic-infra is disabled by default.
 
 To enable newrelic-infra, add a newrelic-infra.yml configuration file in /etc/newrelic-infra/newrelic-infra.yml with your NewRelic license key.
+
+## Provisioning
+
+To build Debian 11 base AMIs:
+
+```bash
+~/bin/packer_1.7.5-dev3_darwin_arm64 init .
+
+aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build --var-file=base_image.auto.pkrvars.hcl -var region=us-east-1 -var environment=stage -timestamp-ui '-except=vagrant.*' base_image.pkr.hcl
+```
+
+To build Debian 11 language-specific AMIs, first build a base AMI and then:
+
+```bash
+cd language_images/<language>/
+
+~/bin/packer_1.7.5-dev3_darwin_arm64 init .
+
+aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build -var region=us-east-1 -var environment=stage -timestamp-ui '-except=vagrant.*' image.pkr.hcl
+```

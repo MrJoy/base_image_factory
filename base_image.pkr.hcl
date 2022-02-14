@@ -167,8 +167,7 @@ source "amazon-ebs" "debian" {
 
   subnet_filter {
     filters = {
-      "tag:Application" : "Packer"
-      "tag:Service" : "Build"
+      "tag:Type" : "Public"
     }
 
     random = true
