@@ -13,18 +13,18 @@
 # limitations under the License.
 
 [Unit]
-Description=Teak Log Collector (Fluentd)
+Description=FasterBetter Log Collector (Fluentd)
 Requires=network.target
 After=network.target
 
 [Service]
-Slice=teak-services.slice
+Slice=fb-services.slice
 ReadOnlyPaths=/
 ProtectSystem=strict
-StateDirectory=teak-log-collector
-CacheDirectory=teak-log-collector
-LogsDirectory=teak-log-collector
-ConfigurationDirectory=teak-log-collector
+StateDirectory=fb-log-collector
+CacheDirectory=fb-log-collector
+LogsDirectory=fb-log-collector
+ConfigurationDirectory=fb-log-collector
 
 NoNewPrivileges=yes
 PrivateTmp=yes

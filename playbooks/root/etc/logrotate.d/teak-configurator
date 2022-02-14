@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/var/log/teak-configurator/configurator.log {
+/var/log/fb-configurator/configurator.log {
   missingok
   notifempty
   compress

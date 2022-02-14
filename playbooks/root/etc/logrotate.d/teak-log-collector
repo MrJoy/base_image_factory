@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/var/log/teak-log-collector/self.log {
+/var/log/fb-log-collector/self.log {
   missingok
   notifempty
   compress
@@ -21,6 +21,6 @@
   rotate 7
 
   postrotate
-    systemctl kill -s USR1 --kill-who=main teak-log-collector.service
+    systemctl kill -s USR1 --kill-who=main fb-log-collector.service
   endscript
 }

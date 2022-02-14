@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Downstream services can specify After=teak-init.target to ensure that they
+# Downstream services can specify After=fb-init.target to ensure that they
 # do not boot until all base services have come up
 
 [Unit]
-Description=Teak base services availability
-Requires=teak-configurator.service
-Wants=teak-log-collector.service
-After=teak-log-collector.service teak-configurator.service
+Description=FasterBetter base services availability
+Requires=fb-configurator.service
+Wants=fb-log-collector.service
+After=fb-log-collector.service fb-configurator.service

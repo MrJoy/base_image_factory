@@ -275,7 +275,7 @@ build {
         - content: |
             [Service]
             Environment="TEAK_SERVICE=${var.environment}_${var.ami_prefix}_${arch.key}.${local.timestamp}"
-          path: /run/systemd/system/teak-.service.d/01_build_environment.conf
+          path: /run/systemd/system/fb-.service.d/01_build_environment.conf
           owner: root:root
           permissions: '0644'
 EOT
@@ -319,9 +319,9 @@ EOT
       # Go ahead and nuke our mainfest
       "sudo rm -fr /tmp/package_manifest.txt",
       # Taken from debian-server-images
-      "sudo rm -fr /var/cache/ /var/lib/apt/lists/* /var/log/apt/ /etc/mailname /var/lib/cloud /var/lib/chrony /var/lib/teak-log-collector /root/.bash_history /root/.ssh/ /root/.ansible/ /root/.bundle/ /etc/machine-id /var/lib/dbus/machine-id",
+      "sudo rm -fr /var/cache/ /var/lib/apt/lists/* /var/log/apt/ /etc/mailname /var/lib/cloud /var/lib/chrony /var/lib/fb-log-collector /root/.bash_history /root/.ssh/ /root/.ansible/ /root/.bundle/ /etc/machine-id /var/lib/dbus/machine-id",
       # Ensure we stop things that'll log before we clear logs
-      "sudo systemctl stop teak-log-collector.service teak-configurator.service systemd-journald.service systemd-journald-dev-log.socket systemd-journald.socket systemd-journald-audit.socket",
+      "sudo systemctl stop fb-log-collector.service fb-configurator.service systemd-journald.service systemd-journald-dev-log.socket systemd-journald.socket systemd-journald-audit.socket",
       "sudo /bin/dash -c 'find /var/log -type f | tee /dev/stderr | xargs rm'",
       # I also want to clear the empty log folder.
       "sudo rm -fr /var/log/journal/*",

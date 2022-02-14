@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # By enabling this unit for a service, we ensure that after the service starts systemd
-# listens for touches on the configurator's restart file, and will run teak-configurator-restart-service@%i.service
+# listens for touches on the configurator's restart file, and will run fb-configurator-restart-service@%i.service
 # when the file is touched.
 #
 # This allows the configurator to restart systemd services without privileged access.
@@ -21,7 +21,7 @@
 Description=Touch a file to restart %i.service
 
 [Path]
-PathModified=/run/teak-configurator/%i.restart
+PathModified=/run/fb-configurator/%i.restart
 
 [Install]
 WantedBy=%i.service

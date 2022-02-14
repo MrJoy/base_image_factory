@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # By enabling this unit for a service, we ensure that after the service starts systemd
-# listens for touches on the configurator's start file, and will run teak-configurator-start-service@%i.service
+# listens for touches on the configurator's start file, and will run fb-configurator-start-service@%i.service
 # when the file is touched.
 #
 # This allows the configurator to start systemd services without privileged access.
@@ -21,7 +21,7 @@
 Description=Touch a file to start %i.service
 
 [Path]
-PathModified=/run/teak-configurator/%i.start
+PathModified=/run/fb-configurator/%i.start
 
 [Install]
 WantedBy=%i.service

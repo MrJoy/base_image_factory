@@ -29,7 +29,7 @@
     - name: Create Configurator Install Dir
       register: configurator_install_dir
       file:
-        path: /opt/teak-configurator
+        path: /opt/fb-configurator
         owner: root
         group: root
         mode: 0755

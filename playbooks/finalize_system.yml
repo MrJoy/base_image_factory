@@ -56,18 +56,18 @@
         name: newrelic-infra
         enabled: no
 
-    - name: Enable Teak Log Aggregator
+    - name: Enable FasterBetter Log Aggregator
       service:
-        name: teak-log-collector
+        name: fb-log-collector
         enabled: yes
         state: started
 
     - name: Enable Meta Configurator
       service:
-        name: teak-metaconfigurator
+        name: fb-metaconfigurator
         enabled: yes
 
     - name: Enable Configurator
       service:
-        name: teak-configurator
+        name: fb-configurator
         enabled: yes

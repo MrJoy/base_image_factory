@@ -13,7 +13,7 @@
 # limitations under the License.
 
 [Unit]
-Description=Teak Meta Configurator (Configures systemd for the configurator)
+Description=FasterBetter Meta Configurator (Configures systemd for the configurator)
 
 [Service]
 ReadOnlyPaths=/
@@ -21,9 +21,9 @@ ReadOnlyPaths=/
 # We persist systemd dropins and other config, so make sure that's writeable
 ReadWritePaths=/run/systemd/system
 ProtectSystem=full
-RuntimeDirectory=teak-configurator
-LogsDirectory=teak-configurator
-ConfigurationDirectory=teak-configurator
+RuntimeDirectory=fb-configurator
+LogsDirectory=fb-configurator
+ConfigurationDirectory=fb-configurator
 WorkingDirectory={{configurator_install_dir.path}}
 
 NoNewPrivileges=yes

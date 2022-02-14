@@ -13,15 +13,15 @@
 # limitations under the License.
 
 [Unit]
-Description=Teak Configurator
-Requires=teak-metaconfigurator.service network.target
-After=teak-metaconfigurator.service network.target
+Description=FasterBetter Configurator
+Requires=fb-metaconfigurator.service network.target
+After=fb-metaconfigurator.service network.target
 
 [Service]
-Slice=teak-services.slice
+Slice=fb-services.slice
 ReadOnlyPaths=/
 ProtectSystem=strict
-RuntimeDirectory=teak-configurator
+RuntimeDirectory=fb-configurator
 # We use files in our runtime directory to both indicate to systemd that services should
 # be restarted and to provide "credential" data to systemd services. If systemd nukes that
 # directory it will see changes to the files we touch to restart services, and so restart the
@@ -32,8 +32,8 @@ RuntimeDirectory=teak-configurator
 # mechanisms to mark a server as unhealthy if it can no longer get new config data.
 RuntimeDirectoryPreserve=yes
 RuntimeDirectoryMode=0700
-LogsDirectory=teak-configurator
-ConfigurationDirectory=teak-configurator
+LogsDirectory=fb-configurator
+ConfigurationDirectory=fb-configurator
 WorkingDirectory={{configurator_install_dir.path}}
 
 NoNewPrivileges=yes
