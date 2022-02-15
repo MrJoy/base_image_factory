@@ -43,7 +43,7 @@ The Base Image provides fb-init.target, which will not be active until all servi
 
 The Base Image provides [Fluentd](https://www.fluentd.org) as fb-log-collector, with the following defaults:
 
-- systemd, cloudinit, fluentf, and configurator logs are tailed under ancillary.{process}
+- systemd, cloudinit, fluentd, and configurator logs are tailed under ancillary.{process}
 - ancillary logs are outputted to cloudwatch_logs under /fb/server/{{ server_environment }}/ancillary/{{ process_name }}:{{ service_name }}.{{ hostname }}
 - logs with the service.default tag will be outputted to /fb/server/{{ server_environment }}/service/{{ service_name }}:{{ service_name }}.{{ hostname }}
 - Downstream images may add additional configuration for fluentd in /etc/fb-log-collector/conf.d/\*.conf.
