@@ -89,5 +89,5 @@ cd language_images/<language>/
 
 ~/bin/packer_1.7.5-dev3_darwin_arm64 init .
 
-aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build -var-file=<language>.auto.pkrvars.hcl -var region=us-east-1 -var environment=stage -timestamp-ui '-except=vagrant.*' image.pkr.hcl
+aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build -var-file=image.auto.pkrvars.hcl -var region=us-east-1 -var environment=stage -timestamp-ui '-except=vagrant.*' image.pkr.hcl
 ```
