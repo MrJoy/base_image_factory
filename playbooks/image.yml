@@ -25,6 +25,5 @@
         - "vars_{{ build_environment }}.yml"
         - "vars_default.yml"
 
-- import_playbook: newrelic.yml
 - import_playbook: ruby_services.yml
 - import_playbook: finalize_system.yml

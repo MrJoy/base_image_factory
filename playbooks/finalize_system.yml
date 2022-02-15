@@ -51,11 +51,6 @@
         name: systemd-reload-after-cloud-init
         enabled: yes
 
-    - name: Disable newrelic-infra
-      service:
-        name: newrelic-infra
-        enabled: no
-
     - name: Enable FasterBetter Log Aggregator
       service:
         name: fb-log-collector

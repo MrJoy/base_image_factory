@@ -72,14 +72,6 @@ fb-configurator is enabled by default in this image.
 
 As the Base Image provides no "metaconfiguration" for the configurator it will not actually do anything.
 
-### newrelic-infra
-
-The Base Image provides [NewRelic Infrastructure Monitoring](https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/).
-
-newrelic-infra is disabled by default.
-
-To enable newrelic-infra, add a newrelic-infra.yml configuration file in /etc/newrelic-infra/newrelic-infra.yml with your NewRelic license key.
-
 ## Provisioning
 
 To build Debian 11 base AMIs:
