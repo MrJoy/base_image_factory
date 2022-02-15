@@ -13,7 +13,7 @@
 # limitations under the License.
 
 [Unit]
-Description=FasterBetter Configurator
+Description=Teak Configurator
 Requires=teak-metaconfigurator.service network.target
 After=teak-metaconfigurator.service network.target
 
