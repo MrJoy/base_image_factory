@@ -14,14 +14,14 @@
 
 [Unit]
 Description=FasterBetter Configurator
-Requires=fb-metaconfigurator.service network.target
-After=fb-metaconfigurator.service network.target
+Requires=teak-metaconfigurator.service network.target
+After=teak-metaconfigurator.service network.target
 
 [Service]
-Slice=fb-services.slice
+Slice=teak-services.slice
 ReadOnlyPaths=/
 ProtectSystem=strict
-RuntimeDirectory=fb-configurator
+RuntimeDirectory=teak-configurator
 # We use files in our runtime directory to both indicate to systemd that services should
 # be restarted and to provide "credential" data to systemd services. If systemd nukes that
 # directory it will see changes to the files we touch to restart services, and so restart the
@@ -32,8 +32,8 @@ RuntimeDirectory=fb-configurator
 # mechanisms to mark a server as unhealthy if it can no longer get new config data.
 RuntimeDirectoryPreserve=yes
 RuntimeDirectoryMode=0700
-LogsDirectory=fb-configurator
-ConfigurationDirectory=fb-configurator
+LogsDirectory=teak-configurator
+ConfigurationDirectory=teak-configurator
 WorkingDirectory={{configurator_install_dir.path}}
 
 NoNewPrivileges=yes

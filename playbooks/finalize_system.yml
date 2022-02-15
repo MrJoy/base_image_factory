@@ -53,16 +53,16 @@
 
     - name: Enable FasterBetter Log Aggregator
       service:
-        name: fb-log-collector
+        name: teak-log-collector
         enabled: yes
         state: started
 
     - name: Enable Meta Configurator
       service:
-        name: fb-metaconfigurator
+        name: teak-metaconfigurator
         enabled: yes
 
     - name: Enable Configurator
       service:
-        name: fb-configurator
+        name: teak-configurator
         enabled: yes

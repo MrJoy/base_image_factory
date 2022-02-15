@@ -12,16 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# By enabling this unit for a service, we ensure that after the service starts systemd
-# listens for touches on the configurator's start file, and will run fb-configurator-start-service@%i.service
-# when the file is touched.
-#
-# This allows the configurator to start systemd services without privileged access.
-[Unit]
-Description=Touch a file to start %i.service
+/var/log/teak-log-collector/self.log {
+  missingok
+  notifempty
+  compress
+  delaycompress
+  daily
+  rotate 7
 
-[Path]
-PathModified=/run/fb-configurator/%i.start
-
-[Install]
-WantedBy=%i.service
+  postrotate
+    systemctl kill -s USR1 --kill-who=main teak-log-collector.service
+  endscript
+}

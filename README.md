@@ -41,12 +41,12 @@ The Base Image provides fb-init.target, which will not be active until all servi
 
 ### Fluentd
 
-The Base Image provides [Fluentd](https://www.fluentd.org) as fb-log-collector, with the following defaults:
+The Base Image provides [Fluentd](https://www.fluentd.org) as teak-log-collector, with the following defaults:
 
 - systemd, cloudinit, fluentd, and configurator logs are tailed under ancillary.{process}
 - ancillary logs are outputted to cloudwatch_logs under /fb/server/{{ server_environment }}/ancillary/{{ process_name }}:{{ service_name }}.{{ hostname }}
 - logs with the service.default tag will be outputted to /fb/server/{{ server_environment }}/service/{{ service_name }}:{{ service_name }}.{{ hostname }}
-- Downstream images may add additional configuration for fluentd in /etc/fb-log-collector/conf.d/\*.conf.
+- Downstream images may add additional configuration for fluentd in /etc/teak-log-collector/conf.d/\*.conf.
 
 Fluentd is enabled by default in this image.
 
@@ -57,7 +57,7 @@ To disable Fluentd at boot, use the following user-data
 ```yml
 #cloud-config
 bootcmd:
-  - [systemctl, stop, --no-block, fb-log-collector]
+  - [systemctl, stop, --no-block, teak-log-collector]
 ```
 
 Be sure to wipe `/var/lib/cloud` after provisioning so that this user-data does not persist to live servers.
@@ -66,9 +66,9 @@ It is recommended that Fluentd remain enabled so that the server logs from the b
 
 ### Configurator
 
-The Base Image provides the [configurator](https://github.com/GoCarrot/configurator) as fb-configurator.
+The Base Image provides the [configurator](https://github.com/GoCarrot/configurator) as teak-configurator.
 
-fb-configurator is enabled by default in this image.
+teak-configurator is enabled by default in this image.
 
 As the Base Image provides no "metaconfiguration" for the configurator it will not actually do anything.
 

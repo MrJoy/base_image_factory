@@ -12,16 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# By enabling this unit for a service, we ensure that after the service starts systemd
-# listens for touches on the configurator's stop file, and will run fb-configurator-stop-service@%i.service
-# when the file is touched.
-#
-# This allows the configurator to stop systemd services without privileged access.
+# Downstream services can specify After=teak-init.target to ensure that they
+# do not boot until all base services have come up
+
 [Unit]
-Description=Touch a file to stop %i.service
-
-[Path]
-PathModified=/run/fb-configurator/%i.stop
-
-[Install]
-WantedBy=%i.service
+Description=Teak base services availability
+Requires=teak-configurator.service
+Wants=teak-log-collector.service
+After=teak-log-collector.service teak-configurator.service
