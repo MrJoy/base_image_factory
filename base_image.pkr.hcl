@@ -275,7 +275,7 @@ build {
         - content: |
             [Service]
             Environment="TEAK_SERVICE=${var.environment}_${var.ami_prefix}_${arch.key}.${local.timestamp}"
-          path: /run/systemd/system/fb-.service.d/01_build_environment.conf
+          path: /run/systemd/system/teak-.service.d/01_build_environment.conf
           owner: root:root
           permissions: '0644'
 EOT

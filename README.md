@@ -28,16 +28,16 @@ When this image provides the option to include additional configuration files in
 
 ### TEAK_SERVICE
 
-The Base Image configures systemd to provide a TEAK_SERVICE environment variable to all systemd services with names starting with `fb-`. By default TEAK_SERVICE will be set to the name of the base image AMI. In non-AMI environments, TEAK_SERVICE will be set to "unknown". To modify this create a configuration file in /etc/systemd/system/fb-.service.d/ with the contents
+The Base Image configures systemd to provide a TEAK_SERVICE environment variable to all systemd services with names starting with `teak-`. By default TEAK_SERVICE will be set to the name of the base image AMI. In non-AMI environments, TEAK_SERVICE will be set to "unknown". To modify this create a configuration file in /etc/systemd/system/teak-.service.d/ with the contents
 
 ```
 [Service]
 Environment="TEAK_SERVICE={{service_name}}"
 ```
 
-### fb-init.target
+### teak-init.target
 
-The Base Image provides fb-init.target, which will not be active until all services provided by the Base Image are available. Downstream services should set `After=fb-init.target` in their unit configurations.
+The Base Image provides teak-init.target, which will not be active until all services provided by the Base Image are available. Downstream services should set `After=teak-init.target` in their unit configurations.
 
 ### Fluentd
 
