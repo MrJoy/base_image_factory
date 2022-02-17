@@ -28,16 +28,28 @@
           - ruby-dev
           - build-essential
 
+    - name: Install Basic Dependencies
+      apt:
+        install_recommends: no
+        state: present
+        name:
+          - openssl
+          - libssl-dev
+          - libreadline-dev
+          - zlib1g-dev
+
     - name: Install Ruby
       register: install_ruby
       args:
         executable: /bin/bash
       shell: |
         set -euo pipefail
+
         echo "Downloading Ruby ${RUBY_VERSION}..."
         wget --quiet https://cache.ruby-lang.org/pub/ruby/${RUBY_SERIES}/ruby-${RUBY_VERSION}.tar.gz
         echo $?
 
+        # TODO: Skip rdoc!
         ACTUAL_CHECKSUM=$(shasum -a 256 ruby-${RUBY_VERSION}.tar.gz | cut -d' ' -f1)
         if [[ "${ACTUAL_CHECKSUM}" != "${RUBY_CHECKSUM}" ]]; then
           echo Checksum mismatch, got ${ACTUAL_CHECKSUM} but expected ${RUBY_CHECKSUM}
