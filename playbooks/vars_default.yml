@@ -15,4 +15,4 @@
 ---
 build_type: vagrant
 server_environment: development
-region: us-west-2
+region: us-east-1
