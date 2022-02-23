@@ -26,4 +26,5 @@
         - "vars_default.yml"
 
 - import_playbook: ruby_services.yml
+- import_playbook: dogstatsd.yml
 - import_playbook: finalize_system.yml
