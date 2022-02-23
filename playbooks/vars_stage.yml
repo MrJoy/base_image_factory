@@ -16,4 +16,3 @@
 build_type: vagrant
 server_environment: stage
 region: us-east-1
-configurator_branch: develop
