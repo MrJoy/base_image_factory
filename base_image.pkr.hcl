@@ -84,7 +84,7 @@ variable "ansible_playbook" {
 variable "volume_size" {
   type        = number
   description = "Size of the root volume in GB"
-  default     = 2
+  default     = 4
 }
 
 variable "security_group_name" {
