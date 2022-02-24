@@ -17,4 +17,3 @@ build_type: vagrant
 server_environment: production
 region: us-east-1
 dd_agent_major_ver: 7
-dd_api_key: "4ab1c06c4af3b32982e1b061f424ed3e"
