@@ -46,7 +46,7 @@ The Base Image provides [Fluentd](https://www.fluentd.org) as teak-log-collector
 - systemd, cloudinit, fluentd, and configurator logs are tailed under ancillary.{process}
 - ancillary logs are outputted to cloudwatch_logs under /fb/server/{{ server_environment }}/ancillary/{{ process_name }}:{{ service_name }}.{{ hostname }}
 - logs with the service.default tag will be outputted to /fb/server/{{ server_environment }}/service/{{ service_name }}:{{ service_name }}.{{ hostname }}
-- Downstream images may add additional configuration for fluentd in /etc/teak-log-collector/conf.d/\*.conf.
+- Downstream images may add additional configuration for fluentd in /etc/fluent/conf.d/\*.conf.
 
 Fluentd is enabled by default in this image.
 
@@ -64,9 +64,9 @@ Be sure to wipe `/var/lib/cloud` after provisioning so that this user-data does 
 
 It is recommended that Fluentd remain enabled so that the server logs from the build process running be logged to CloudWatch.
 
-### Configurator
+### Config O-Mat
 
-The Base Image provides the [configurator](https://github.com/GoCarrot/configurator) as teak-configurator.
+The Base Image provides the [config_o_mat](https://github.com/GoCarrot/config_o_mat) as teak-configurator.
 
 teak-configurator is enabled by default in this image.
 
