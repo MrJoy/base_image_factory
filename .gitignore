@@ -2,3 +2,4 @@
 .vagrant
 output-debian
 manifests/
+secrets.auto.pkrvars.hcl

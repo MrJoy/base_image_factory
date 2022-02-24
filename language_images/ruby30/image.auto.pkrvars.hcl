@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+datadog_api_key = "dummy" # We shouldn't need this for a language image, since it's already baked in.
+
 ami_prefix             = "ruby30"
 source_ami_name_prefix = "base"
 cost_center            = "node30_image"

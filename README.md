@@ -22,6 +22,10 @@ When setting things up, you will need to download a copy of the fork of Packer w
 
 Unzip and put the file in `~/bin`.
 
+### Secrets
+
+Copy `secrets.auto.pkrvars.hcl.template` to `secrets.auto.pkrvars.hcl`, and populate all the variables listed within.
+
 ## Image Specifications
 
 When this image provides the option to include additional configuration files in a directory, file names must be prefixed with two digits and end in .conf. The prefixes 00 to 29 and 90 to 95 are reserved for use by this image.
@@ -79,7 +83,7 @@ To build Debian 11 base AMIs:
 ```bash
 ~/bin/packer_1.7.5-dev3_darwin_arm64 init .
 
-aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build --var-file=base_image.auto.pkrvars.hcl -var region=us-east-1 -var environment=stage -timestamp-ui '-except=vagrant.*' base_image.pkr.hcl
+aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build --var-file=base_image.auto.pkrvars.hcl --var-file=secrets.auto.pkrvars.hcl -var region=us-east-1 -var environment=stage -timestamp-ui '-except=vagrant.*' base_image.pkr.hcl
 ```
 
 To build Debian 11 language-specific AMIs, first build a base AMI and then:

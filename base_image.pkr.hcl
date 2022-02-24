@@ -99,6 +99,11 @@ variable "commit_id" {
   default     = env("CIRCLE_SHA1")
 }
 
+variable "datadog_api_key" {
+  type        = string
+  description = "API key for the DataDog agent."
+}
+
 data "amazon-parameterstore" "role_arn" {
   region = var.region
 
@@ -289,7 +294,7 @@ EOT
   provisioner "ansible" {
     playbook_file = abspath(var.ansible_playbook)
     extra_arguments = [
-      "--extra-vars", "build_environment=${var.environment} region=${var.region} build_type=${source.type}"
+      "--extra-vars", "build_environment=${var.environment} region=${var.region} build_type=${source.type} dd_api_key=${var.datadog_api_key}"
     ]
     ansible_env_vars = [
       "ANSIBLE_SSH_ARGS='-o ForwardAgent=yes -o StrictHostKeyChecking=no -o ControlMaster=auto -o ControlPersist=60s'",
