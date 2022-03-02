@@ -76,6 +76,19 @@ teak-configurator is enabled by default in this image.
 
 As the Base Image provides no "metaconfiguration" for the configurator it will not actually do anything.
 
+## Adding a New Language
+
+```bash
+cd language_images
+cp -rfp <some_existing_language> <new_language>
+cd <new_language>
+rm image.pkr.hcl
+ln -sfn ../../base_image.pkr.hcl image.pkr.hcl # We want this to be a symlink to the base one!
+# Edit image.auto.pkrvars.hcl to change `ami_prefix` and `cost_center`.
+#
+# Edit playbooks as appropriate.
+```
+
 ## Provisioning
 
 To build Debian 11 base AMIs:
