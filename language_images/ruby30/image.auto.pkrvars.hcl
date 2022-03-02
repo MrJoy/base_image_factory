@@ -16,4 +16,4 @@ datadog_api_key = "dummy" # We shouldn't need this for a language image, since i
 
 ami_prefix             = "ruby30"
 source_ami_name_prefix = "base"
-cost_center            = "node30_image"
+cost_center            = "ruby30_image"
