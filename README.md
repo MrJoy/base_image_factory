@@ -80,14 +80,37 @@ As the Base Image provides no "metaconfiguration" for the configurator it will n
 
 ```bash
 cd language_images
-cp -rfp <some_existing_language> <new_language>
+cp -Rfp <some_existing_language> <new_language> # Note:  Don't put trailing slashes on the directory names!
+ls -la <new_language>/image.pkr.hcl
+# You should see something like:
+# lrwxr-xr-x  1 jonathonfrisby  staff  24 Feb  8 11:55 node12/image.pkr.hcl -> ../../base_image.pkr.hcl
+
+# If, and only if, the file is _not_ a symlink, then do the following:
 cd <new_language>
 rm image.pkr.hcl
 ln -sfn ../../base_image.pkr.hcl image.pkr.hcl # We want this to be a symlink to the base one!
+
+# Once the directory is set up, with the Packer definition being a symlink:
+#
 # Edit image.auto.pkrvars.hcl to change `ami_prefix` and `cost_center`.
 #
 # Edit playbooks as appropriate.
 ```
+
+### New Ruby Versions
+
+Start from the most recent, relevant Ruby image, copying to a new folder with an appropriate name as per the general instructions.
+
+In the `language_images/rubyXX/playbooks/ruby.yml` file, look for lines that look like this:
+
+```
+        RUBY_SERIES: "3.0"
+        RUBY_VERSION: "3.0.3"
+        RUBY_CHECKSUM: 3586861cb2df56970287f0fd83f274bd92058872d830d15570b36def7f1a92ac
+```
+
+Revise these with appropriate values, from the [official website](https://www.ruby-lang.org/en/downloads/).
+
 
 ## Provisioning
 
