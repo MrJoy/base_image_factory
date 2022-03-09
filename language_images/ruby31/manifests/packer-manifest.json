@@ -373,7 +373,29 @@
       "custom_data": {
         "arch": "arm64"
       }
+    },
+    {
+      "name": "debian",
+      "builder_type": "amazon-ebs",
+      "build_time": 1646859871,
+      "files": null,
+      "artifact_id": "us-east-1:ami-06a88a8ed781bacc5",
+      "packer_run_uuid": "852c3c20-f2c1-243e-4c3f-8503d2264e3a",
+      "custom_data": {
+        "arch": "x86_64"
+      }
+    },
+    {
+      "name": "debian",
+      "builder_type": "amazon-ebs",
+      "build_time": 1646859906,
+      "files": null,
+      "artifact_id": "us-east-1:ami-01425f39637041d32",
+      "packer_run_uuid": "852c3c20-f2c1-243e-4c3f-8503d2264e3a",
+      "custom_data": {
+        "arch": "arm64"
+      }
     }
   ],
-  "last_run_uuid": "f5a1f8b8-8db3-2d14-73cd-c3e244633e85"
+  "last_run_uuid": "852c3c20-f2c1-243e-4c3f-8503d2264e3a"
 }

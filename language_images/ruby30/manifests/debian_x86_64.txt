@@ -206,9 +206,9 @@ libxxhash0:amd64	0.8.0-2
 libyaml-0-2:amd64	0.2.2-1
 libzstd1:amd64	1.4.8+dfsg-2.1
 linux-base	4.6
-linux-image-5.10.0-11-cloud-amd64	5.10.92-2
-linux-image-cloud-amd64	5.10.92-2
-linux-libc-dev:amd64	5.10.92-2
+linux-image-5.10.0-12-cloud-amd64	5.10.103-1
+linux-image-cloud-amd64	5.10.103-1
+linux-libc-dev:amd64	5.10.103-1
 locales	2.31-13+deb11u2
 login	1:4.8.1-1
 logrotate	3.18.0-2
