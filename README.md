@@ -97,6 +97,8 @@ ln -sfn ../../base_image.pkr.hcl image.pkr.hcl # We want this to be a symlink to
 # Edit playbooks as appropriate.
 ```
 
+Now, you'll need to add the appropriate blocks in `.circleci/config.yml`.  Use an existing language as a guide, and note that you need to add blocks in both `references` and `workflows`.
+
 ### New Ruby Versions
 
 Start from the most recent, relevant Ruby image, copying to a new folder with an appropriate name as per the general instructions.
