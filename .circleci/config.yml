@@ -108,20 +108,32 @@ workflows:
           <<: *node12-build
       - teak/build-dependent-images:
           name: "Build node12 dependent images"
+          region: << pipeline.parameters.region >>
+          build_account_slug: << pipeline.parameters.build_account_slug >>
           ami_name_prefix: "node12"
           requires:
              - "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+          context:
+            - AWS
       - teak/packer-build:
           <<: *ruby30-build
       - teak/build-dependent-images:
           name: "Build ruby30 dependent images"
+          region: << pipeline.parameters.region >>
+          build_account_slug: << pipeline.parameters.build_account_slug >>
           ami_name_prefix: "ruby30"
           requires:
              - "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+          context:
+            - AWS
       - teak/packer-build:
           <<: *ruby31-build
       - teak/build-dependent-images:
           name: "Build ruby31 dependent images"
+          region: << pipeline.parameters.region >>
+          build_account_slug: << pipeline.parameters.build_account_slug >>
           ami_name_prefix: "ruby31"
           requires:
              - "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+          context:
+            - AWS
