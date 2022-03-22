@@ -61,13 +61,31 @@ references:
     except: "vagrant.*"
     context:
       - AWS-Write
-  node-build: &node-build
+  node12-build: &node12-build
     <<: *packer-build
     name: "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
     post-steps:
       - store_artifacts:
-          path: "lanugage_images/node12/manifests"
+          path: "language_images/node12/manifests"
     packer_working_directory: "language_images/node12"
+    requires:
+      - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
+  ruby30-build: &ruby30-build
+    <<: *packer-build
+    name: "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+    post-steps:
+      - store_artifacts:
+          path: "language_images/ruby30/manifests"
+    packer_working_directory: "language_images/ruby30"
+    requires:
+      - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
+  ruby31-build: &ruby31-build
+    <<: *packer-build
+    name: "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+    post-steps:
+      - store_artifacts:
+          path: "language_images/ruby31/manifests"
+    packer_working_directory: "language_images/ruby31"
     requires:
       - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
 
@@ -87,9 +105,23 @@ workflows:
           context:
             - AWS
       - teak/packer-build:
-          <<: *node-build
+          <<: *node12-build
       - teak/build-dependent-images:
           name: "Build node12 dependent images"
           ami_name_prefix: "node12"
+          requires:
+             - "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+      - teak/packer-build:
+          <<: *ruby30-build
+      - teak/build-dependent-images:
+          name: "Build ruby30 dependent images"
+          ami_name_prefix: "ruby30"
+          requires:
+             - "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+      - teak/packer-build:
+          <<: *ruby31-build
+      - teak/build-dependent-images:
+          name: "Build ruby31 dependent images"
+          ami_name_prefix: "ruby31"
           requires:
              - "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
