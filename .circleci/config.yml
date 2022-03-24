@@ -138,3 +138,4 @@ workflows:
              - "Generate Ruby 3.1 Image (<< pipeline.parameters.build_account_slug >>)"
           context:
             - AWS
+            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
