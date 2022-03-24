@@ -18,18 +18,6 @@ orbs:
   teak: teak/sdk-utils@0.5
 
 parameters:
-  run-apply:
-    type: boolean
-    default: false
-  continuation-cache-id:
-    type: string
-    default: ""
-  workspace:
-    type: string
-    default: ""
-  plan-log-url:
-    type: string
-    default: ""
   region:
     type: string
     default: us-east-1
