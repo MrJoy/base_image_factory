@@ -21,10 +21,10 @@ parameters:
   region:
     type: string
     default: us-east-1
-  build_account_slug:
+  in_build_account_slug:
     type: string
     default: "stage-ci-cd"
-  deploy_account_slug:
+  in_deploy_account_slug:
     type: string
     default: "stage-workload"
 
@@ -33,7 +33,7 @@ references:
     version: 1.7.5-dev2
     github_releases_user: AlexSc
     gpg_key_id: EC3A3F7C6C4F9D25
-    name: "Generate Images (<< pipeline.parameters.build_account_slug >>)"
+    name: "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
     pre-steps:
       - run:
           name: "Prepare Circle image"
@@ -45,38 +45,38 @@ references:
     post-steps:
       - store_artifacts:
           path: "manifests/"
-    var: "region=<< pipeline.parameters.region >>,build_account_canonical_slug=<< pipeline.parameters.build_account_slug >>,cost_center=base_image,datadog_api_key=$DATADOG_API_KEY"
+    var: "region=<< pipeline.parameters.region >>,build_account_canonical_slug=<< pipeline.parameters.in_build_account_slug >>,cost_center=base_image,datadog_api_key=$DATADOG_API_KEY"
     except: "vagrant.*"
     context:
       - AWS-Write
       - DataDog
   node12-build: &node12-build
     <<: *packer-build
-    name: "Generate Node 12 Image (<< pipeline.parameters.build_account_slug >>)"
+    name: "Generate Node 12 Image (<< pipeline.parameters.in_build_account_slug >>)"
     post-steps:
       - store_artifacts:
           path: "language_images/node12/manifests"
     packer_working_directory: "language_images/node12"
     requires:
-      - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
+      - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
   ruby30-build: &ruby30-build
     <<: *packer-build
-    name: "Generate Ruby 3.0 Image (<< pipeline.parameters.build_account_slug >>)"
+    name: "Generate Ruby 3.0 Image (<< pipeline.parameters.in_build_account_slug >>)"
     post-steps:
       - store_artifacts:
           path: "language_images/ruby30/manifests"
     packer_working_directory: "language_images/ruby30"
     requires:
-      - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
+      - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
   ruby31-build: &ruby31-build
     <<: *packer-build
-    name: "Generate Ruby 3.1 Image (<< pipeline.parameters.build_account_slug >>)"
+    name: "Generate Ruby 3.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
     post-steps:
       - store_artifacts:
           path: "language_images/ruby31/manifests"
     packer_working_directory: "language_images/ruby31"
     requires:
-      - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
+      - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
 
 workflows:
   version: 2
@@ -87,10 +87,10 @@ workflows:
       - teak/build-dependent-images:
           name: "Build base dependent images"
           region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.build_account_slug >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
           ami_name_prefix: "base"
           requires:
-            - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
+            - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
           context:
             - AWS
             - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
@@ -99,10 +99,10 @@ workflows:
       - teak/build-dependent-images:
           name: "Build node12 dependent images"
           region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.build_account_slug >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
           ami_name_prefix: "node12"
           requires:
-             - "Generate Node 12 Image (<< pipeline.parameters.build_account_slug >>)"
+             - "Generate Node 12 Image (<< pipeline.parameters.in_build_account_slug >>)"
           context:
             - AWS
             - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
@@ -111,10 +111,10 @@ workflows:
       - teak/build-dependent-images:
           name: "Build ruby30 dependent images"
           region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.build_account_slug >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
           ami_name_prefix: "ruby30"
           requires:
-             - "Generate Ruby 3.0 Image (<< pipeline.parameters.build_account_slug >>)"
+             - "Generate Ruby 3.0 Image (<< pipeline.parameters.in_build_account_slug >>)"
           context:
             - AWS
             - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
@@ -123,10 +123,10 @@ workflows:
       - teak/build-dependent-images:
           name: "Build ruby31 dependent images"
           region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.build_account_slug >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
           ami_name_prefix: "ruby31"
           requires:
-             - "Generate Ruby 3.1 Image (<< pipeline.parameters.build_account_slug >>)"
+             - "Generate Ruby 3.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
           context:
             - AWS
             - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
