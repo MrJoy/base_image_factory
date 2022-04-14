@@ -111,7 +111,7 @@ In the `language_images/rubyXX/playbooks/ruby.yml` file, look for lines that loo
         RUBY_CHECKSUM: 3586861cb2df56970287f0fd83f274bd92058872d830d15570b36def7f1a92ac
 ```
 
-Revise these with appropriate values, from the [official website](https://www.ruby-lang.org/en/downloads/).
+Revise these with appropriate values (use .tar.gz version, and SHA256 checksum!), from the [official website](https://www.ruby-lang.org/en/downloads/).
 
 
 ## Provisioning
