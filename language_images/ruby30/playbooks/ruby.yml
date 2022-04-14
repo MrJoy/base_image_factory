@@ -77,8 +77,8 @@
         bundle --version
       environment:
         RUBY_SERIES: "3.0"
-        RUBY_VERSION: "3.0.3"
-        RUBY_CHECKSUM: 3586861cb2df56970287f0fd83f274bd92058872d830d15570b36def7f1a92ac
+        RUBY_VERSION: "3.0.4"
+        RUBY_CHECKSUM: 70b47c207af04bce9acea262308fb42893d3e244f39a4abc586920a1c723722b
     - debug: var=install_ruby.stdout_lines
 
     - name: Remove Build Tools
