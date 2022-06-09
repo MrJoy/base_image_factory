@@ -104,6 +104,12 @@ variable "use_generated_security_group" {
   default     = false
 }
 
+variable "external_id" {
+  type        = string
+  description = "The ExternalId value to use when assuming a role in the admin/meta account."
+  default     = env("ARN_EXTERNAL_ID")
+}
+
 data "amazon-parameterstore" "account_info" {
   region = var.region
 
@@ -138,6 +144,7 @@ data "amazon-parameterstore" "ami_users" {
 data "amazon-ami" "base_x86_64_debian_ami" {
   assume_role {
     role_arn = data.amazon-parameterstore.role_arn.value
+    external_id = var.external_id
   }
 
   filters = {
@@ -154,6 +161,7 @@ data "amazon-ami" "base_x86_64_debian_ami" {
 data "amazon-ami" "base_arm64_debian_ami" {
   assume_role {
     role_arn = data.amazon-parameterstore.role_arn.value
+    external_id = var.external_id
   }
 
   filters = {
@@ -186,6 +194,7 @@ locals {
 source "amazon-ebs" "debian" {
   assume_role {
     role_arn = data.amazon-parameterstore.role_arn.value
+    external_id = var.external_id
   }
 
   subnet_filter {
