@@ -107,12 +107,12 @@ variable "use_generated_security_group" {
 variable "external_id" {
   type        = string
   description = "The ExternalId value to use when assuming a role in the admin/meta account."
-  default     = env("ARN_EXTERNAL_ID")
+  default     = env("ROLE_EXTERNAL_ID")
 
   # Use this if you're having issues with credentials!
   # validation {
   #   condition     = length(var.external_id) == 40
-  #   error_message = "Specify ARN_EXTERNAL_ID environment variable, with appropriate value."
+  #   error_message = "Specify ROLE_EXTERNAL_ID environment variable, with appropriate value."
   # }
 }
 
