@@ -14,57 +14,98 @@
 
 version: 2.1
 
-setup: true
+orbs:
+  teak: teak/sdk-utils@0.8
 
 parameters:
   region:
     type: string
     default: us-east-1
-  # Work around CircleCI brain damage.
-  # It is an error for a continuation to _not_ change a pipeline parameter. We drop the in_ prefix
-  # from these parameters in continue.yml, so that Circle sees changes.
   in_build_account_slug:
     type: string
-    default: ''
+    default: "stage-ci-cd"
   in_deploy_account_slug:
     type: string
-    default: ''
+    default: "stage-workload"
 
-orbs:
-  teak: teak/sdk-utils@0.5
+references:
+  packer-build: &packer-build
+    version: 1.7.5-dev2
+    github_releases_user: AlexSc
+    gpg_key_id: EC3A3F7C6C4F9D25
+    name: "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
+    pre-steps:
+      - run:
+          name: "Prepare Circle image"
+          command: |
+            sudo apt-get update && sudo apt-get install -y --no-install-recommends ansible
+
+            ip=$(curl -s https://api.ipify.org)
+            echo "My public IP address is: $ip"
+    post-steps:
+      - store_artifacts:
+          path: "manifests/"
+    var: "region=<< pipeline.parameters.region >>,build_account_canonical_slug=<< pipeline.parameters.in_build_account_slug >>,cost_center=base_image,datadog_api_key=$DATADOG_API_KEY"
+    except: "vagrant.*"
+    context:
+      - AWS-Write
+      - DataDog
+  ruby30-build: &ruby30-build
+    <<: *packer-build
+    name: "Generate Ruby 3.0 Image (<< pipeline.parameters.in_build_account_slug >>)"
+    post-steps:
+      - store_artifacts:
+          path: "language_images/ruby30/manifests"
+    packer_working_directory: "language_images/ruby30"
+    requires:
+      - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
+  ruby31-build: &ruby31-build
+    <<: *packer-build
+    name: "Generate Ruby 3.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
+    post-steps:
+      - store_artifacts:
+          path: "language_images/ruby31/manifests"
+    packer_working_directory: "language_images/ruby31"
+    requires:
+      - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
 
 workflows:
   version: 2
-  terraform-plan:
-    when:
-      not: << pipeline.parameters.in_build_account_slug >>
+  build-only:
     jobs:
-      - teak/terraform-plan: &terraform-plan
-          filters:
-            branches:
-              only:
-                - stage
-          version: 1.2.1
-          name: "Plan (Stage)"
-          path: "terraform"
-          workspace: "stage-ci-cd"
-          continuation: true
-          var: "region=<< pipeline.parameters.region >>,branch=$CIRCLE_BRANCH"
-          context: AWS-Write
-          continuation_parameters: "region=<< pipeline.parameters.region >>,build_account_slug=stage-ci-cd"
-      - teak/terraform-plan:
-          <<: *terraform-plan
-          filters:
-            branches:
-              only:
-                - main
-          name: "Plan (Prod)"
-          workspace: "prod-ci-cd"
-          continuation_parameters: "region=<< pipeline.parameters.region >>,build_account_slug=prod-ci-cd"
-  image-update-only:
-    when: << pipeline.parameters.in_build_account_slug >>
-
-    jobs:
-      - teak/ami-update-continuation:
+      - teak/packer-build:
+          <<: *packer-build
+      - teak/build-dependent-images:
+          name: "Build base dependent images"
           region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.in_build_account_slug>>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
+          ami_name_prefix: "base"
+          requires:
+            - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
+          context:
+            - AWS
+            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
+      - teak/packer-build:
+          <<: *ruby30-build
+      - teak/build-dependent-images:
+          name: "Build ruby30 dependent images"
+          region: << pipeline.parameters.region >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
+          ami_name_prefix: "ruby30"
+          requires:
+             - "Generate Ruby 3.0 Image (<< pipeline.parameters.in_build_account_slug >>)"
+          context:
+            - AWS
+            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
+      - teak/packer-build:
+          <<: *ruby31-build
+      - teak/build-dependent-images:
+          name: "Build ruby31 dependent images"
+          region: << pipeline.parameters.region >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
+          ami_name_prefix: "ruby31"
+          requires:
+             - "Generate Ruby 3.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
+          context:
+            - AWS
+            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.

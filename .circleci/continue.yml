@@ -70,15 +70,15 @@ references:
     except: "vagrant.*"
     context:
       - AWS-Write
-  node-build: &node-build
-    <<: *packer-build
-    name: "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
-    post-steps:
-      - store_artifacts:
-          path: "language_images/node12/manifests"
-    packer_working_directory: "language_images/node12"
-    requires:
-      - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
+  # node-build: &node-build
+  #   <<: *packer-build
+  #   name: "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+  #   post-steps:
+  #     - store_artifacts:
+  #         path: "language_images/node12/manifests"
+  #   packer_working_directory: "language_images/node12"
+  #   requires:
+  #     - "Generate Images (<< pipeline.parameters.build_account_slug >>)"
 
 workflows:
   version: 2
@@ -117,14 +117,14 @@ workflows:
           context:
             - AWS
             - CircleCI
-      - teak/packer-build:
-          <<: *node-build
-      - teak/build-dependent-images: &build-dependent-node-images
-          <<: *build-depdendent-images
-          name: "Build node12 dependent images"
-          ami_name_prefix: "node12"
-          requires:
-             - "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
+      # - teak/packer-build:
+      #     <<: *node-build
+      # - teak/build-dependent-images: &build-dependent-node-images
+      #     <<: *build-depdendent-images
+      #     name: "Build node12 dependent images"
+      #     ami_name_prefix: "node12"
+      #     requires:
+      #        - "Generate Node Image (<< pipeline.parameters.build_account_slug >>)"
   build-only:
     when:
       not: << pipeline.parameters.run-apply >>
