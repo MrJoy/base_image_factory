@@ -74,7 +74,8 @@ module "build-trigger" {
     aws = aws.admin
   }
 
-  source = "GoCarrot/declare-ami-dependency/aws"
+  source  = "GoCarrot/declare-ami-dependency/aws"
+  version = "0.0.1"
 
   branch                 = var.branch
   build_from_account     = terraform.workspace

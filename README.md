@@ -6,10 +6,25 @@ This provisions a Base Image from a previously created Root Image.
 
 We use `Root Image` to mean a completely unprovisioned bare image with nothing beyond a basic OS install. We use `Base Image` to mean a partially provisioned image with services required by all operational servers, e.g. monitoring, log aggregation, telemetry, etc.
 
-## Local System Requirements
+## Setup
 
-- packer >= 1.7.3
-- ansible >= 4.3
+### Basic Tooling
+
+First setup Homebrew, and make sure everything is up to date.
+
+Clone this repo and `cd` into it.  Run the following to set up tools:
+
+```bash
+brew bundle
+```
+
+When setting things up, you will need to download a copy of the fork of Packer we use from here: <https://github.com/AlexSc/packer/releases/tag/v1.7.5-dev3>
+
+Unzip and put the file in `~/bin`.
+
+### Secrets
+
+Copy `secrets.auto.pkrvars.hcl.template` to `secrets.auto.pkrvars.hcl`, and populate all the variables listed within.
 
 ## Image Specifications
 
@@ -33,8 +48,8 @@ The Base Image provides teak-init.target, which will not be active until all ser
 The Base Image provides [Fluentd](https://www.fluentd.org) as teak-log-collector, with the following defaults:
 
 - systemd, cloudinit, fluentd, and configurator logs are tailed under ancillary.{process}
-- ancillary logs are outputted to cloudwatch_logs under /teak/server/{{ server_environment }}/ancillary/{{ process_name }}:{{ service_name }}.{{ hostname }}
-- logs with the service.default tag will be outputted to /teak/server/{{ server_environment }}/service/{{ service_name }}:{{ service_name }}.{{ hostname }}
+- ancillary logs are outputted to cloudwatch_logs under /mj/server/{{ server_environment }}/ancillary/{{ process_name }}:{{ service_name }}.{{ hostname }}
+- logs with the service.default tag will be outputted to /mj/server/{{ server_environment }}/service/{{ service_name }}:{{ service_name }}.{{ hostname }}
 - Downstream images may add additional configuration for fluentd in /etc/fluent/conf.d/\*.conf.
 
 Fluentd is enabled by default in this image.
@@ -61,10 +76,60 @@ teak-configurator is enabled by default in this image.
 
 As the Base Image provides no "metaconfiguration" for the configurator it will not actually do anything.
 
-### newrelic-infra
+## Adding a New Language
 
-The Base Image provides [NewRelic Infrastructure Monitoring](https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/).
+```bash
+cd language_images
+cp -Rfp <some_existing_language> <new_language> # Note:  Don't put trailing slashes on the directory names!
+ls -la <new_language>/image.pkr.hcl
+# You should see something like:
+# lrwxr-xr-x  1 jonathonfrisby  staff  24 Feb  8 11:55 node12/image.pkr.hcl -> ../../base_image.pkr.hcl
 
-newrelic-infra is disabled by default.
+# If, and only if, the file is _not_ a symlink, then do the following:
+cd <new_language>
+rm image.pkr.hcl
+ln -sfn ../../base_image.pkr.hcl image.pkr.hcl # We want this to be a symlink to the base one!
 
-To enable newrelic-infra, add a newrelic-infra.yml configuration file in /etc/newrelic-infra/newrelic-infra.yml with your NewRelic license key.
+# Once the directory is set up, with the Packer definition being a symlink:
+#
+# Edit image.auto.pkrvars.hcl to change `ami_prefix` and `cost_center`.
+#
+# Edit playbooks as appropriate.
+```
+
+Now, you'll need to add the appropriate blocks in `.circleci/config.yml`.  Use an existing language as a guide, and note that you need to add blocks in both `references` and `workflows`.
+
+### New Ruby Versions
+
+Start from the most recent, relevant Ruby image, copying to a new folder with an appropriate name as per the general instructions.
+
+In the `language_images/rubyXX/playbooks/ruby.yml` file, look for lines that look like this:
+
+```
+        RUBY_SERIES: "3.0"
+        RUBY_VERSION: "3.0.3"
+        RUBY_CHECKSUM: 3586861cb2df56970287f0fd83f274bd92058872d830d15570b36def7f1a92ac
+```
+
+Revise these with appropriate values (use .tar.gz version, and SHA256 checksum!), from the [official website](https://www.ruby-lang.org/en/downloads/).
+
+
+## Provisioning
+
+To build Debian 11 base AMIs:
+
+```bash
+~/bin/packer_1.7.5-dev3_darwin_arm64 init .
+
+aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build --var-file=base_image.auto.pkrvars.hcl --var-file=secrets.auto.pkrvars.hcl -var region=us-east-1 -var build_account_canonical_slug=stage-ci-cd -var use_generated_security_group=true -var cost_center=root_image -timestamp-ui '-except=vagrant.*' base_image.pkr.hcl
+```
+
+To build Debian 11 language-specific AMIs, first build a base AMI and then:
+
+```bash
+cd language_images/<language>/
+
+~/bin/packer_1.7.5-dev3_darwin_arm64 init .
+
+aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build -var-file=image.auto.pkrvars.hcl -var region=us-east-1 -var build_account_canonical_slug=stage-ci-cd -var use_generated_security_group=true -var cost_center=root_image -timestamp-ui '-except=vagrant.*' image.pkr.hcl
+```

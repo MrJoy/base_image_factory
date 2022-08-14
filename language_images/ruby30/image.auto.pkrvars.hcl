@@ -12,18 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
----
-- hosts: all
-  become: yes
+datadog_api_key = "dummy" # We shouldn't need this for a language image, since it's already baked in.
 
-  vars:
-    build_environment: development
-
-  pre_tasks:
-    - include_vars: "{{ item }}"
-      with_first_found:
-        - "vars_{{ build_environment }}.yml"
-        - "vars_default.yml"
-
-- import_playbook: ruby_services.yml
-- import_playbook: finalize_system.yml
+ami_prefix             = "ruby30"
+source_ami_name_prefix = "base"
+cost_center            = "ruby30_image"
