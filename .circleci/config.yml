@@ -45,7 +45,7 @@ references:
     post-steps:
       - store_artifacts:
           path: "manifests/"
-    var: "region=<< pipeline.parameters.region >>,build_account_canonical_slug=<< pipeline.parameters.in_build_account_slug >>,cost_center=base_image,datadog_api_key=$DATADOG_API_KEY"
+    var: "region=<< pipeline.parameters.region >>,build_account_canonical_slug=<< pipeline.parameters.in_build_account_slug >>,cost_center=base_image"
     except: "vagrant.*"
     context:
       - AWS-Write
