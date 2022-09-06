@@ -121,7 +121,7 @@ To build Debian 11 base AMIs:
 ```bash
 ~/bin/packer_1.7.5-dev3_darwin_arm64 init .
 
-aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build --var-file=base_image.auto.pkrvars.hcl --var-file=secrets.auto.pkrvars.hcl -var region=us-east-1 -var build_account_canonical_slug=stage-ci-cd -var use_generated_security_group=true -var cost_center=root_image -timestamp-ui '-except=vagrant.*' base_image.pkr.hcl
+aws-vault exec mrjoy -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build --var-file=base_image.auto.pkrvars.hcl --var-file=secrets.auto.pkrvars.hcl -var region=us-east-1 -var build_account_canonical_slug=stage-ci-cd -var use_generated_security_group=true -var cost_center=root_image -timestamp-ui '-except=vagrant.*' base_image.pkr.hcl
 ```
 
 To build Debian 11 language-specific AMIs, first build a base AMI and then:
@@ -131,5 +131,5 @@ cd language_images/<language>/
 
 ~/bin/packer_1.7.5-dev3_darwin_arm64 init .
 
-aws-vault exec fb -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build -var-file=image.auto.pkrvars.hcl -var region=us-east-1 -var build_account_canonical_slug=stage-ci-cd -var use_generated_security_group=true -var cost_center=root_image -timestamp-ui '-except=vagrant.*' image.pkr.hcl
+aws-vault exec mrjoy -- ~/bin/packer_1.7.5-dev3_darwin_arm64 build -var-file=image.auto.pkrvars.hcl -var region=us-east-1 -var build_account_canonical_slug=stage-ci-cd -var use_generated_security_group=true -var cost_center=root_image -timestamp-ui '-except=vagrant.*' image.pkr.hcl
 ```
