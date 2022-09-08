@@ -20,11 +20,6 @@ packer {
       version = "=1.0.2-dev"
       source  = "github.com/AlexSc/amazon"
     }
-
-    vagrant = {
-      version = "~> 1"
-      source  = "github.com/hashicorp/vagrant"
-    }
   }
 }
 
@@ -270,13 +265,6 @@ source "amazon-ebs" "debian" {
   sriov_support           = true
 }
 
-source "vagrant" "debian" {
-  source_path = "teak/bullseye64"
-  provider    = "vmware_desktop"
-
-  communicator = "ssh"
-}
-
 build {
   dynamic "source" {
     for_each = local.arch_map
@@ -320,14 +308,10 @@ EOT
     }
   }
 
-  source "vagrant.debian" {
-
-  }
-
   provisioner "ansible" {
     playbook_file = "${path.root}/${var.ansible_playbook}"
     extra_arguments = [
-      "--extra-vars", "build_environment=${local.environment} region=${var.region} build_type=${source.type} dd_api_key=${var.datadog_api_key}"
+      "--extra-vars", "build_environment=${local.environment} region=${var.region} dd_api_key=${var.datadog_api_key}"
     ]
     ansible_env_vars = [
       "ANSIBLE_SSH_ARGS='-o ForwardAgent=yes -o StrictHostKeyChecking=no -o ControlMaster=auto -o ControlPersist=60s'",

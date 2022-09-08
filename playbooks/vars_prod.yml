@@ -13,7 +13,6 @@
 # limitations under the License.
 
 ---
-build_type: vagrant
 server_environment: prod
 region: us-east-1
 dd_agent_major_ver: 7
