@@ -15,7 +15,7 @@
 version: 2.1
 
 orbs:
-  teak: teak/sdk-utils@0.8
+  teak: teak/sdk-utils@0.9
 
 parameters:
   region:
@@ -34,6 +34,7 @@ references:
     github_releases_user: AlexSc
     gpg_key_id: EC3A3F7C6C4F9D25
     name: "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
+    image: "cimg/base:current-20.04"
     pre-steps:
       - run:
           name: "Prepare Circle image"
