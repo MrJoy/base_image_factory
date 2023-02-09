@@ -17,7 +17,7 @@ packer {
 
   required_plugins {
     amazon = {
-      version = "=1.0.2-dev"
+      version = "=1.0.9-dev"
       source  = "github.com/AlexSc/amazon"
     }
   }
