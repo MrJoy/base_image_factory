@@ -77,6 +77,15 @@ references:
     packer_working_directory: "language_images/ruby31"
     requires:
       - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
+  ruby321-build: &ruby321-build
+    <<: *packer-build
+    name: "Generate Ruby 3.2.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
+    post-steps:
+      - store_artifacts:
+          path: "language_images/ruby321/manifests"
+    packer_working_directory: "language_images/ruby321"
+    requires:
+      - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
 
 workflows:
   version: 2
@@ -127,6 +136,18 @@ workflows:
           ami_name_prefix: "ruby31"
           requires:
              - "Generate Ruby 3.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
+          context:
+            - AWS
+            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
+      - teak/packer-build:
+          <<: *ruby321-build
+      - teak/build-dependent-images:
+          name: "Build ruby321 dependent images"
+          region: << pipeline.parameters.region >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
+          ami_name_prefix: "ruby321"
+          requires:
+             - "Generate Ruby 3.2.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
           context:
             - AWS
             - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
