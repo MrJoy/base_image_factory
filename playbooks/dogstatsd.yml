@@ -6,6 +6,10 @@
     - name: Install dogstatsd
       shell: |
         bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+        echo >> /etc/datadog-agent/datadog.yaml
+        echo 'collect_ec2_tags: true' >> /etc/datadog-agent/datadog.yaml
+        echo 'collect_ec2_tags_use_imds: true' >> /etc/datadog-agent/datadog.yaml
+        echo 'ec2_prefer_imdsv2: true' >> /etc/datadog-agent/datadog.yaml
       environment:
         DD_AGENT_MAJOR_VERSION: "{{ dd_agent_major_ver }}"
         DD_API_KEY: "{{ dd_api_key }}"
