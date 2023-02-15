@@ -37,6 +37,7 @@
           - libssl-dev
           - libreadline-dev
           - zlib1g-dev
+          - libyaml-dev
 
     - name: Install Ruby
       register: install_ruby
