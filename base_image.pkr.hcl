@@ -225,6 +225,7 @@ source "amazon-ebs" "debian" {
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = "required"
+    instance_metadata_tags      = "enabled"
     http_put_response_hop_limit = 1
   }
 
