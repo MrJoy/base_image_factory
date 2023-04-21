@@ -14,6 +14,6 @@
 
 datadog_api_key = "dummy" # We shouldn't need this for a language image, since it's already baked in.
 
-ami_prefix             = "ruby321"
+ami_prefix             = "ruby314"
 source_ami_name_prefix = "base"
-cost_center            = "ruby321_image"
+cost_center            = "ruby314_image"
