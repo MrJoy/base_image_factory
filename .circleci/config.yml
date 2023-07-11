@@ -34,6 +34,7 @@ references:
     github_releases_user: AlexSc
     gpg_key_id: EC3A3F7C6C4F9D25
     name: "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
+    image: "cimg/base:current-20.04"
     pre-steps:
       - run:
           name: "Prepare Circle image"
@@ -49,23 +50,22 @@ references:
     except: "vagrant.*"
     context:
       - AWS-Write
-      - DataDog
-  ruby30-build: &ruby30-build
+  ruby314-build: &ruby314-build
     <<: *packer-build
-    name: "Generate Ruby 3.0 Image (<< pipeline.parameters.in_build_account_slug >>)"
+    name: "Generate Ruby 3.1.4 Image (<< pipeline.parameters.in_build_account_slug >>)"
     post-steps:
       - store_artifacts:
-          path: "language_images/ruby30/manifests"
-    packer_working_directory: "language_images/ruby30"
+          path: "language_images/ruby314/manifests"
+    packer_working_directory: "language_images/ruby314"
     requires:
       - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
-  ruby31-build: &ruby31-build
+  ruby322-build: &ruby322-build
     <<: *packer-build
-    name: "Generate Ruby 3.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
+    name: "Generate Ruby 3.2.2 Image (<< pipeline.parameters.in_build_account_slug >>)"
     post-steps:
       - store_artifacts:
-          path: "language_images/ruby31/manifests"
-    packer_working_directory: "language_images/ruby31"
+          path: "language_images/ruby322/manifests"
+    packer_working_directory: "language_images/ruby322"
     requires:
       - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
 
@@ -86,18 +86,6 @@ workflows:
             - AWS
             - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
       - teak/packer-build:
-          <<: *ruby30-build
-      - teak/build-dependent-images:
-          name: "Build ruby30 dependent images"
-          region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.in_build_account_slug >>
-          ami_name_prefix: "ruby30"
-          requires:
-             - "Generate Ruby 3.0 Image (<< pipeline.parameters.in_build_account_slug >>)"
-          context:
-            - AWS
-            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
-      - teak/packer-build:
           <<: *ruby31-build
       - teak/build-dependent-images:
           name: "Build ruby31 dependent images"
@@ -106,6 +94,30 @@ workflows:
           ami_name_prefix: "ruby31"
           requires:
              - "Generate Ruby 3.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
+          context:
+            - AWS
+            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
+      - teak/packer-build:
+          <<: *ruby314-build
+      - teak/build-dependent-images:
+          name: "Build ruby314 dependent images"
+          region: << pipeline.parameters.region >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
+          ami_name_prefix: "ruby314"
+          requires:
+             - "Generate Ruby 3.1.4 Image (<< pipeline.parameters.in_build_account_slug >>)"
+          context:
+            - AWS
+            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
+      - teak/packer-build:
+          <<: *ruby322-build
+      - teak/build-dependent-images:
+          name: "Build ruby322 dependent images"
+          region: << pipeline.parameters.region >>
+          build_account_slug: << pipeline.parameters.in_build_account_slug >>
+          ami_name_prefix: "ruby322"
+          requires:
+             - "Generate Ruby 3.2.2 Image (<< pipeline.parameters.in_build_account_slug >>)"
           context:
             - AWS
             - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.

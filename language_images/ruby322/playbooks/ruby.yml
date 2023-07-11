@@ -1,4 +1,4 @@
-# Copyright 2022 FasterBetter, LLC
+# Copyright 2022 Sixty AI, Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 ---
 - hosts: all
-  become: yes
+  become: true
 
   tasks:
     - name: Install Build Tools
@@ -37,6 +37,7 @@
           - libssl-dev
           - libreadline-dev
           - zlib1g-dev
+          - libyaml-dev
 
     - name: Install Ruby
       register: install_ruby
@@ -76,9 +77,9 @@
         ruby --version
         bundle --version
       environment:
-        RUBY_SERIES: "3.1"
-        RUBY_VERSION: "3.1.1"
-        RUBY_CHECKSUM: fe6e4782de97443978ddba8ba4be38d222aa24dc3e3f02a6a8e7701c0eeb619d
+        RUBY_SERIES: "3.2"
+        RUBY_VERSION: "3.2.2"
+        RUBY_CHECKSUM: 96c57558871a6748de5bc9f274e93f4b5aad06cd8f37befa0e8d94e7b8a423bc
     - debug: var=install_ruby.stdout_lines
 
     - name: Remove Build Tools

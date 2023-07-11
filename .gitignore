@@ -1,7 +1,12 @@
 # Ignore build outputs
 .vagrant
 output-debian
+# N.B. I'm versioning these artifacts just so we have a record of what patches were incorporated
+# at what time.
 manifests/
+languages_images/*/manifests/
+
+secrets.auto.pkrvars.hcl
 
 # Ignore terraform stuff
 *.tfplan
