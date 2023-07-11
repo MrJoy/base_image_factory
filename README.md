@@ -83,7 +83,7 @@ cd language_images
 cp -Rfp <some_existing_language> <new_language> # Note:  Don't put trailing slashes on the directory names!
 ls -la <new_language>/image.pkr.hcl
 # You should see something like:
-# lrwxr-xr-x  1 jonathonfrisby  staff  24 Feb  8 11:55 node12/image.pkr.hcl -> ../../base_image.pkr.hcl
+# lrwxr-xr-x  1 jonathonfrisby  staff  24 Feb  8 11:55 ruby314/image.pkr.hcl -> ../../base_image.pkr.hcl
 
 # If, and only if, the file is _not_ a symlink, then do the following:
 cd <new_language>

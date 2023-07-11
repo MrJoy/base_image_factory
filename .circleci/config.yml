@@ -14,110 +14,73 @@
 
 version: 2.1
 
-orbs:
-  teak: teak/sdk-utils@0.9
-
 parameters:
   region:
     type: string
     default: us-east-1
   in_build_account_slug:
     type: string
-    default: "stage-ci-cd"
+    default: ""
   in_deploy_account_slug:
     type: string
-    default: "stage-workload"
+    default: ""
 
-references:
-  packer-build: &packer-build
-    version: 1.7.5-dev2
-    github_releases_user: AlexSc
-    gpg_key_id: EC3A3F7C6C4F9D25
-    name: "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
-    image: "cimg/base:current-20.04"
-    pre-steps:
-      - run:
-          name: "Prepare Circle image"
-          command: |
-            sudo apt-get update && sudo apt-get install -y --no-install-recommends ansible
-
-            ip=$(curl -s https://api.ipify.org)
-            echo "My public IP address is: $ip"
-    post-steps:
-      - store_artifacts:
-          path: "manifests/"
-    var: "region=<< pipeline.parameters.region >>,build_account_canonical_slug=<< pipeline.parameters.in_build_account_slug >>,cost_center=base_image"
-    except: "vagrant.*"
-    context:
-      - AWS-Write
-  ruby314-build: &ruby314-build
-    <<: *packer-build
-    name: "Generate Ruby 3.1.4 Image (<< pipeline.parameters.in_build_account_slug >>)"
-    post-steps:
-      - store_artifacts:
-          path: "language_images/ruby314/manifests"
-    packer_working_directory: "language_images/ruby314"
-    requires:
-      - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
-  ruby322-build: &ruby322-build
-    <<: *packer-build
-    name: "Generate Ruby 3.2.2 Image (<< pipeline.parameters.in_build_account_slug >>)"
-    post-steps:
-      - store_artifacts:
-          path: "language_images/ruby322/manifests"
-    packer_working_directory: "language_images/ruby322"
-    requires:
-      - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
+orbs:
+  buildomat: teak/buildomat@0.1
 
 workflows:
   version: 2
   build-only:
     jobs:
-      - teak/packer-build:
-          <<: *packer-build
-      - teak/build-dependent-images:
-          name: "Build base dependent images"
+      - buildomat/terraform-plan: &terraform-plan
+          filters:
+            branches:
+              only:
+                - stage
+          version: 1.3.6
+          name: "Plan (Stage)"
+          path: "terraform"
+          workspace: "stage-ci-cd"
+          continuation: true
+          var: "region=<< pipeline.parameters.region >>,branch=$CIRCLE_BRANCH"
+          context: AWS-OIDC-Role
+          continuation_parameters: "region=<< pipeline.parameters.region >>,build_account_slug=stage-ci-cd"
+      - buildomat/terraform-plan:
+          <<: *terraform-plan
+          filters:
+            branches:
+              only:
+                - main
+          name: "Plan (Production)"
+          workspace: "production-ci-cd"
+          continuation_parameters: "region=<< pipeline.parameters.region >>,build_account_slug=production-ci-cd"
+
+      - buildomat/terraform-continuation:
+          filters:
+            branches:
+              only:
+                - stage
+          name: "Continue (Stage)"
+          requires:
+            - "Plan (Development)"
+      - buildomat/terraform-continuation:
+          filters:
+            branches:
+              only:
+                - main
+          name: "Continue (Production)"
+          requires:
+            - "Plan (Production)"
+  image-update-only:
+    when: << pipeline.parameters.in_build_account_slug >>
+
+    jobs:
+      - buildomat/ami-update-continuation:
           region: << pipeline.parameters.region >>
           build_account_slug: << pipeline.parameters.in_build_account_slug >>
           ami_name_prefix: "base"
           requires:
             - "Generate Images (<< pipeline.parameters.in_build_account_slug >>)"
-          context:
-            - AWS
-            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
-      - teak/packer-build:
-          <<: *ruby31-build
-      - teak/build-dependent-images:
-          name: "Build ruby31 dependent images"
-          region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.in_build_account_slug >>
-          ami_name_prefix: "ruby31"
-          requires:
-             - "Generate Ruby 3.1 Image (<< pipeline.parameters.in_build_account_slug >>)"
-          context:
-            - AWS
-            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
-      - teak/packer-build:
-          <<: *ruby314-build
-      - teak/build-dependent-images:
-          name: "Build ruby314 dependent images"
-          region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.in_build_account_slug >>
-          ami_name_prefix: "ruby314"
-          requires:
-             - "Generate Ruby 3.1.4 Image (<< pipeline.parameters.in_build_account_slug >>)"
-          context:
-            - AWS
-            - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
-      - teak/packer-build:
-          <<: *ruby322-build
-      - teak/build-dependent-images:
-          name: "Build ruby322 dependent images"
-          region: << pipeline.parameters.region >>
-          build_account_slug: << pipeline.parameters.in_build_account_slug >>
-          ami_name_prefix: "ruby322"
-          requires:
-             - "Generate Ruby 3.2.2 Image (<< pipeline.parameters.in_build_account_slug >>)"
           context:
             - AWS
             - CircleCI # Needed to trigger CI pipelines.  Current token is owned by Jon Frisby, and will need to be changed if he ever leaves the org.
