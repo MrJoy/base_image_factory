@@ -1,4 +1,4 @@
-# Copyright 2022 FasterBetter, LLC
+# Copyright 2022 Sixty AI, Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 ---
 - hosts: all
-  become: yes
+  become: true
 
   tasks:
     - name: Install Build Tools
@@ -76,9 +76,9 @@
         ruby --version
         bundle --version
       environment:
-        RUBY_SERIES: "3.0"
-        RUBY_VERSION: "3.0.4"
-        RUBY_CHECKSUM: 70b47c207af04bce9acea262308fb42893d3e244f39a4abc586920a1c723722b
+        RUBY_SERIES: "3.1"
+        RUBY_VERSION: "3.1.4"
+        RUBY_CHECKSUM: a3d55879a0dfab1d7141fdf10d22a07dbf8e5cdc4415da1bde06127d5cc3c7b6
     - debug: var=install_ruby.stdout_lines
 
     - name: Remove Build Tools

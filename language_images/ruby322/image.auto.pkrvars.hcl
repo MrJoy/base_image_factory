@@ -12,16 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
----
-- hosts: all
-  become: true
+datadog_api_key = "dummy" # We shouldn't need this for a language image, since it's already baked in.
 
-  tasks:
-    - name: Install Node & NPM
-      apt:
-        update_cache: yes
-        install_recommends: no
-        state: present
-        name:
-          - nodejs
-          - npm
+ami_prefix             = "ruby322"
+source_ami_name_prefix = "base"
+cost_center            = "ruby322_image"
