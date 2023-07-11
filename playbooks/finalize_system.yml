@@ -51,7 +51,7 @@
         name: systemd-reload-after-cloud-init
         enabled: yes
 
-    - name: Enable FasterBetter Log Aggregator
+    - name: Enable Sixty AI Log Aggregator
       service:
         name: teak-log-collector
         enabled: yes
