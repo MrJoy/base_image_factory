@@ -8,6 +8,9 @@ languages_images/*/manifests/
 
 secrets.auto.pkrvars.hcl
 
-# Ignore terraform stuff
+# Ignore Terraform stuff
 *.tfplan
 .terraform
+
+# Ignore Packer stuff
+secrets.auto.pkrvars.hcl
